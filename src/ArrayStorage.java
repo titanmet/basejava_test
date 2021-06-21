@@ -5,9 +5,15 @@ public class ArrayStorage {
     Resume[] storage = new Resume[10000];
 
     void clear() {
+        for (int i = 0; i < storage.length; i++) {
+            storage[i] = null;
+        }
     }
 
     void save(Resume r) {
+        for (int i = 0; i < storage.length; i++) {
+            storage[i] = r;
+        }
     }
 
     Resume get(String uuid) {
