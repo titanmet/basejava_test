@@ -1,5 +1,8 @@
+package com.webapp.storage;
+
+import com.webapp.model.Resume;
+
 import java.util.Arrays;
-import java.util.Random;
 
 /**
  * Array based storage for Resumes
@@ -23,15 +26,15 @@ public class ArrayStorage {
 
     public Resume get(String uuid) {
         for (Resume resume : storage) {
-            if (resume.uuid.equals(uuid))
+            if (resume.getUuid().equals(uuid))
                 return resume;
         }
         return null;
     }
 
-    void delete(String uuid) {
+    public void delete(String uuid) {
         for (int i = 0; i < size; i++) {
-            if(uuid.equals(storage[i].uuid)){
+            if(uuid.equals(storage[i].getUuid())){
                 storage[i] = storage[size-1];
                 storage[size-1] = null;
                 size--;
@@ -42,11 +45,11 @@ public class ArrayStorage {
     /**
      * @return array, contains only Resumes in storage (without null)
      */
-    Resume[] getAll() {
+    public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
 
-    int size() {
+    public int size() {
         return size;
     }
 }
