@@ -48,6 +48,16 @@ public class ArrayStorage extends AbstractArrayStorage {
         }
     }
 
+    @Override
+    protected void fillDeleteelement(int index) {
+        storage[index] = storage[size-1];
+    }
+
+    @Override
+    protected void insertElement(Resume r, int index) {
+        storage[size] = r;
+    }
+
     /**
      * @return array, contains only Resumes in storage (without null)
      */
