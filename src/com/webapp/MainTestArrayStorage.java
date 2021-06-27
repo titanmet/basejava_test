@@ -3,8 +3,6 @@ package com.webapp;
 import com.webapp.model.Resume;
 import com.webapp.storage.ArrayStorage;
 
-import java.util.Arrays;
-
 /**
  * Test for your com.webapp.storage.ArrayStorage implementation
  */
@@ -12,11 +10,11 @@ public class MainTestArrayStorage {
     static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
 
     public static void main(String[] args) {
-        Resume r1 = new Resume();
+        Resume r1 = new Resume(uuid);
         r1.setUuid("uuid1");
-        Resume r2 = new Resume();
+        Resume r2 = new Resume(uuid);
         r2.setUuid("uuid2");
-        Resume r3 = new Resume();
+        Resume r3 = new Resume(uuid);
         r3.setUuid("uuid3");
 
         ARRAY_STORAGE.save(r1);
