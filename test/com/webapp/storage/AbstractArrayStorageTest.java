@@ -35,25 +35,13 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void size() throws Exception {
-       assertSize(3);
+        assertSize(3);
     }
 
     @Test
     public void clear() throws Exception {
         storage.clear();
         assertSize(0);
-    }
-
-    @Test(expected = StorageException.class)
-    public void saveOverflow() throws Exception {
-        try{
-            for (int i = 4; i <= AbstractArrayStorage.STORAGE_LIMIT+1 ; i++) {
-                storage.save(new Resume());
-            }
-        } catch (StorageException e) {
-//            Assert.fail();
-        }
-        storage.save(new Resume());
     }
 
     @Test
@@ -89,15 +77,27 @@ public abstract class AbstractArrayStorageTest {
         storage.save(RESUME_1);
     }
 
-    @Test(expected = NotExistStorageException.class)
-    public void delete() throws Exception{
-    storage.delete(UUID_1);
-    assertSize(2);
-    storage.get(UUID_1);
+    @Test(expected = StorageException.class)
+    public void saveOverflow() throws Exception {
+        try {
+            for (int i = 4; i <= AbstractArrayStorage.STORAGE_LIMIT + 1; i++) {
+                storage.save(new Resume());
+            }
+        } catch (StorageException e) {
+            Assert.fail();
+        }
+        storage.save(new Resume());
     }
 
     @Test(expected = NotExistStorageException.class)
-    public void deleteNotExist() throws Exception{
+    public void delete() throws Exception {
+        storage.delete(UUID_1);
+        assertSize(2);
+        storage.get(UUID_1);
+    }
+
+    @Test(expected = NotExistStorageException.class)
+    public void deleteNotExist() throws Exception {
         storage.get("dummy");
     }
 
