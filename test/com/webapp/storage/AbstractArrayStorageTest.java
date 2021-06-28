@@ -17,7 +17,7 @@ public abstract class AbstractArrayStorageTest {
     private static final String UUID_2 = "uuid2";
     private static final Resume RESUME_2 = new Resume(UUID_2);
     private static final String UUID_3 = "uuid3";
-    private static final Resume RESUME_3 = new Resume(UUID_3);
+    public static final Resume RESUME_3 = new Resume(UUID_3);
     private static final String UUID_4 = "uuid4";
     private static final Resume RESUME_4 = new Resume(UUID_4);
 
@@ -74,7 +74,7 @@ public abstract class AbstractArrayStorageTest {
         Assert.assertEquals(3, array.length);
         Assert.assertEquals(RESUME_1, array[0]);
         Assert.assertEquals(RESUME_2, array[1]);
-        Assert.assertEquals(RESUME_3, array[2]);
+        assertEquals(RESUME_3, array[2]);
     }
 
     @Test
