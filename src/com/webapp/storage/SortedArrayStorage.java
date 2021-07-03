@@ -4,6 +4,7 @@ import com.webapp.model.Resume;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Array based storage for Resumes
@@ -38,7 +39,12 @@ public class SortedArrayStorage extends AbstractArrayStorage{
 
     @Override
     protected Integer getSearchKey(String uuid) {
-        Resume searchKey = new Resume(uuid);
+        Resume searchKey = new Resume(uuid, "dummy");
         return Arrays.binarySearch(storage,0,size, searchKey, RESUME_COMPARATOR);
+    }
+
+    @Override
+    public List<Resume> getAllSorted() {
+        return null;
     }
 }
