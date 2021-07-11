@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     private Path directory;
@@ -88,7 +89,8 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     public void clear() {
         try {
-            Files.list(directory).forEach(this::doDelete);
+            List<Path> list = Files.list(directory).collect(Collectors.toList());
+            list.forEach(this::doDelete);
         } catch (IOException e) {
             throw new StorageException("Path delete error", null);
         }
@@ -96,10 +98,11 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
 
     @Override
     public int size() {
-        String[] list = directory.list();
-        if (list == null) {
-            throw new StorageException("Directory read error", null);
+        try {
+            Files.list(directory).forEach(this::doGet);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        return list.length;
+        return null;
     }
 }
