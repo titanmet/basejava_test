@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractPathStorage extends AbstractPathStorage<Path> {
+public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     private Path directory;
 
     protected AbstractPathStorage(String dir) {
