@@ -2,6 +2,7 @@ package com.webapp.storage;
 
 import com.webapp.exception.StorageException;
 import com.webapp.model.Resume;
+import com.webapp.storage.serializer.StreamSerializer;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -14,10 +15,12 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public abstract class AbstractPathStorage extends AbstractStorage<Path> {
+public class PathStorage extends AbstractStorage<Path> {
     private Path directory;
+    private StreamSerializer streamSerializer;
 
-    protected AbstractPathStorage(String dir) {
+    protected PathStorage(String dir, StreamSerializer streamSerializer) {
+        this.streamSerializer = streamSerializer;
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "directory must not be null");
         if (!Files.isDirectory(directory) || !Files.isWritable(directory)) {
@@ -34,7 +37,7 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Resume r, Path Path) {
         try {
-            doWrite(r, new BufferedOutputStream(Files.newOutputStream(Path)));
+            streamSerializer.doWrite(r, new BufferedOutputStream(Files.newOutputStream(Path)));
         } catch (IOException e) {
             throw new StorageException("Path write error", r.getUuid(), e);
         }
@@ -55,14 +58,10 @@ public abstract class AbstractPathStorage extends AbstractStorage<Path> {
         doUpdate(r, path);
     }
 
-    protected abstract void doWrite(Resume r, OutputStream os) throws IOException;
-
-    protected abstract Resume doRead(InputStream is) throws IOException;
-
     @Override
     protected Resume doGet(Path path) {
         try {
-            return doRead(new BufferedInputStream(Files.newInputStream(path)));
+            return streamSerializer.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Path read error", getFileName(path), e);
         }
