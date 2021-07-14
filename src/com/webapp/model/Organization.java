@@ -2,6 +2,8 @@ package com.webapp.model;
 
 import com.webapp.util.DataUtil;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.Month;
@@ -13,10 +15,14 @@ import java.util.Objects;
 import static com.webapp.util.DataUtil.NOW;
 import static com.webapp.util.DataUtil.of;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final Link homePage;
+    private Link homePage;
     private List<Position> positions = new ArrayList<>();
+
+    public Organization() {
+    }
 
     public Organization(String name, String url, Position... positions) {
         this(new Link(name, url), Arrays.asList(positions));
@@ -46,13 +52,14 @@ public class Organization implements Serializable {
         return Objects.hash(homePage, positions);
     }
 
-
-
     public static class Position implements Serializable {
-        private final LocalDate startDate;
-        private final LocalDate endDate;
-        private final String title;
-        private final String description;
+        private LocalDate startDate;
+        private LocalDate endDate;
+        private String title;
+        private String description;
+
+        public Position() {
+        }
 
         public Position(int startYear, Month startMonth, String title, String description) {
            this(of(startYear, startMonth), NOW, title, description);
