@@ -76,6 +76,18 @@ public class Resume implements Comparable<Resume>, Serializable {
                 Objects.equals(sections, resume.sections);
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, Section> getSections() {
+        return sections;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(uuid, fullName, contacts, sections);
