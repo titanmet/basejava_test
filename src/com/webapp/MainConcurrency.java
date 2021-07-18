@@ -1,6 +1,10 @@
 package com.webapp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainConcurrency {
+    public static final int THREADS_NUMBER = 10000;
     private static int counter;
     private static final Object LOCK = new Object();
     
@@ -20,32 +24,41 @@ public class MainConcurrency {
 
         System.out.println(thread0.getState());
         final MainConcurrency mainConcurrency = new MainConcurrency();
+        List<Thread> threads = new ArrayList<>(THREADS_NUMBER);
 
-        for (int i = 0; i < 10000; i++) {
-            new Thread(() -> {
+        for (int i = 0; i < THREADS_NUMBER; i++) {
+            Thread thread = new Thread(() -> {
                 for (int j = 0; j < 100; j++) {
                     mainConcurrency.inc();
                 }
-            }).start();
+            });
+            thread.start();
+            threads.add(thread);
+            thread.join();
         }
-
-        Thread.sleep(500);
+        threads.forEach(t-> {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
         System.out.println(counter);
     }
 
-    private void inc() {
+    private synchronized void inc() {
 //        synchronized (this) {
 //        synchronized (MainConcurrency.class) {
-            double a = Math.sin(13.);
-        try {
-            synchronized (this) {
+//            double a = Math.sin(13.);
+//        try {
+//            synchronized (this) {
                 counter++;
-                wait();
+//                wait();
 //                readFile;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//            }
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
 //        }
 //        }
     }
