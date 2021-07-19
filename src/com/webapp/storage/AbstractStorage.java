@@ -14,9 +14,9 @@ public abstract class AbstractStorage<SK> implements Storage {
     protected abstract void doUpdate(Resume r, SK searchKey);
     protected abstract boolean isExist(SK searchKey);
     protected abstract void doSave(Resume r, SK searchKey);
-    protected abstract Resume doGet(SK searchKey);
+    protected abstract Resume doGet(SK searchKey) throws IllegalAccessException;
     protected abstract void doDelete(SK searchKey);
-    protected abstract List<Resume> doCopyAll();
+    protected abstract List<Resume> doCopyAll() throws IllegalAccessException;
 
     @Override
     public void update(Resume r) {
@@ -51,7 +51,7 @@ public abstract class AbstractStorage<SK> implements Storage {
     }
 
     @Override
-    public Resume get(String uuid) {
+    public Resume get(String uuid) throws IllegalAccessException {
         LOG.info("Get " + uuid);
         SK searchKey = getExistedSearchKey(uuid);
         return doGet(searchKey);
@@ -65,7 +65,7 @@ public abstract class AbstractStorage<SK> implements Storage {
     }
 
     @Override
-    public List<Resume> getAllSorted() {
+    public List<Resume> getAllSorted() throws IllegalAccessException {
         List<Resume> list = doCopyAll();
         Collections.sort(list);
         return list;

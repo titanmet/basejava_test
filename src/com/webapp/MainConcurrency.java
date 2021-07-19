@@ -1,11 +1,13 @@
 package com.webapp;
 
+import com.webapp.util.LazySingleton;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainConcurrency {
     public static final int THREADS_NUMBER = 10000;
-    private static int counter;
+    private static volatile int counter;
     private static final Object LOCK = new Object();
     
     public static void main(String[] args) throws InterruptedException {
@@ -15,6 +17,7 @@ public class MainConcurrency {
             @Override
             public void run() {
                 System.out.println(getName() + ", " + getState());
+                throw new IllegalStateException();
             }
         };
         thread0.start();
@@ -43,7 +46,7 @@ public class MainConcurrency {
                 e.printStackTrace();
             }
         });
-        System.out.println(counter);
+        System.out.println(mainConcurrency.counter);
     }
 
     private synchronized void inc() {

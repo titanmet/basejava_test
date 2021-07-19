@@ -55,7 +55,7 @@ public abstract class FileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    protected Resume doGet(File file) {
+    protected Resume doGet(File file) throws IllegalAccessException {
         try {
             return streamSerializer.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
@@ -71,7 +71,7 @@ public abstract class FileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    protected List<Resume> doCopyAll() {
+    protected List<Resume> doCopyAll() throws IllegalAccessException {
         File[] files = directory.listFiles();
         if(files == null) {
             throw new StorageException("Directory read error");

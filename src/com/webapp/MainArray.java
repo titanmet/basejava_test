@@ -17,7 +17,7 @@ import java.util.List;
 public class MainArray {
     private final static Storage ARRAY_STORAGE = new ArrayStorage();
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, IllegalAccessException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         Resume r;
         while (true) {
@@ -68,7 +68,7 @@ public class MainArray {
         }
     }
 
-    static void printAll() {
+    static void printAll() throws IllegalAccessException {
         List<Resume> all = ARRAY_STORAGE.getAllSorted();
         System.out.println("----------------------------");
         if (all.size() == 0) {

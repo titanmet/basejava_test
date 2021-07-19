@@ -16,11 +16,11 @@ public interface Storage {
 
     void save(Resume r);
 
-    Resume get(String uuid);
+    Resume get(String uuid) throws IllegalAccessException;
 
     void delete(String uuid);
 
-    List<Resume> getAllSorted();
+    List<Resume> getAllSorted() throws IllegalAccessException;
 
     int size();
 }

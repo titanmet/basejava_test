@@ -134,7 +134,7 @@ public abstract class AbstractStorageTest {
         storage.get("dummy");
     }
 
-    public void assertGet(Resume r) {
+    public void assertGet(Resume r) throws IllegalAccessException {
         Assert.assertEquals(r, storage.get(r.getUuid()));
     }
 
