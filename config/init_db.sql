@@ -6,9 +6,6 @@ create table resume
     full_name text
 );
 
-alter table resume
-    owner to postgres;
-
 create table contact
 (
     id          serial   not null
@@ -21,6 +18,3 @@ create table contact
             references resume
             on update restrict on delete cascade
 );
-
-alter table contact
-    owner to postgres;
