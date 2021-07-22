@@ -1,10 +1,6 @@
 package com.webapp;
 
-import com.webapp.model.Section;
-import com.webapp.util.LazySingleton;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.*;
@@ -86,6 +82,14 @@ public class MainConcurrency {
 //        deadLock(lock1, lock2);
 //        deadLock(lock2, lock1);
 
+    }
+
+    public int[] minValue(int[] values) {
+       return values;
+    }
+
+    public List<Integer> oddOrEven(List<Integer> integers) {
+        return integers;
     }
 
     private static void deadLock(String lock1, String lock2) {
