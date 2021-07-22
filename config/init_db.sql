@@ -18,3 +18,6 @@ create table contact
             references resume
             on update restrict on delete cascade
 );
+
+create unique index contact_uuid_type_index
+    on contact (resume_uuid, type);
