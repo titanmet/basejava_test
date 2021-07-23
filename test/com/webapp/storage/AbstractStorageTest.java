@@ -1,5 +1,6 @@
 package com.webapp.storage;
 
+import com.webapp.Config;
 import com.webapp.exception.ExistStorageException;
 import com.webapp.exception.NotExistStorageException;
 import com.webapp.model.*;
@@ -13,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public abstract class AbstractStorageTest {
-    protected static final File STORAGE_DIR = new File("./storage");
+    protected static final File STORAGE_DIR = Config.get().getStorageDir();
     protected Storage storage;
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
