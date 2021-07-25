@@ -30,7 +30,7 @@ public class SqlStorage implements Storage {
                 ps -> {
                     ps.setString(1, r.getFullName());
                     ps.setString(2, r.getUuid());
-                    if(ps.executeUpdate() == 0) {
+                    if (ps.executeUpdate() == 0) {
                         throw new NotExistStorageException(r.getUuid());
                     }
                     return null;
@@ -39,28 +39,30 @@ public class SqlStorage implements Storage {
 
     @Override
     public void save(Resume r) {
-        sqlHelper.<Void>execute("INSERT INTO resume (uuid, full_name) VALUES (?,?)",
-                ps -> {
+        sqlHelper.transactionExecute(conn -> {
+            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO resume (uuid, full_name) VALUES (?,?)")) {
+                ps.setString(1, r.getUuid());
+                ps.setString(2, r.getFullName());
+                ps.execute();
+            }
+            try (PreparedStatement ps = conn.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)")) {
+                for (Map.Entry<ContactType, String> e : r.getContacts().entrySet()) {
                     ps.setString(1, r.getUuid());
-                    ps.setString(2, r.getFullName());
-                    ps.execute();
-                    return null;
-                });
-        for(Map.Entry<ContactType, String> e: r.getContacts().entrySet()) {
-            sqlHelper.<Void>execute("INSERT INTO contact (resume_uuid, type, value) VALUES (?,?,?)",
-                    ps -> {
-                        ps.setString(1, r.getUuid());
-                        ps.setString(2, e.getKey().name());
-                        ps.setString(3, e.getValue());
-                        return null;
-                    });
-        }
+                    ps.setString(2, e.getKey().name());
+                    ps.setString(3, e.getValue());
+                    ps.addBatch();
+                }
+                ps.executeBatch();
+            }
+            return null;
+        });
     }
+
 
     @Override
     public Resume get(String uuid) throws IllegalAccessException {
         return sqlHelper.execute("SELECT * FROM resume r \n" +
-                "LEFT JOIN contact c ON r.uuid = c.resume_uuid WHERE r.uuid =?",
+                        "LEFT JOIN contact c ON r.uuid = c.resume_uuid WHERE r.uuid =?",
                 ps -> {
                     ps.setString(1, uuid);
                     ResultSet rs = ps.executeQuery();
@@ -82,7 +84,7 @@ public class SqlStorage implements Storage {
         sqlHelper.execute("DELETE FROM resume WHERE uuid=?",
                 ps -> {
                     ps.setString(1, uuid);
-                    if(ps.executeUpdate() == 0) {
+                    if (ps.executeUpdate() == 0) {
                         throw new NotExistStorageException(uuid);
                     }
                     return null;

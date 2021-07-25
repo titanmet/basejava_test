@@ -14,7 +14,7 @@ public class SqlHelper {
     }
 
     public void execute(String sql) {
-        execute(sql, PreparedStatement::execute);
+        execute(sql, ps -> ps.execute());
     }
 
     public <T> T execute(String sql, SqlExecutor<T> executor) {
@@ -25,4 +25,21 @@ public class SqlHelper {
             throw ExceptionUtil.convertException(e);
         }
     }
+
+    public <T> T transactionExecute(SqlTransaction<T> executor) {
+        try (Connection conn = connectionFactory.getConnection()) {
+            try {
+                conn.setAutoCommit(false);
+                T res = executor.execute(conn);
+                conn.commit();
+                return res;
+            } catch (SQLException e) {
+                conn.rollback();
+                throw ExceptionUtil.convertException(e);
+            }
+        } catch (SQLException e) {
+            throw new StorageException(e);
+        }
+    }
+
 }
