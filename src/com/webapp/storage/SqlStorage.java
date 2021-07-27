@@ -9,6 +9,7 @@ import sql.SqlHelper;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -86,9 +87,7 @@ public class SqlStorage implements Storage {
                     }
                     Resume r = new Resume(uuid, rs.getString("full_name"));
                     do {
-                        String value = rs.getString("value");
-                        ContactType type = ContactType.valueOf(rs.getString("type"));
-                        r.addContact(type, value);
+                       addContact(rs, r);
                     } while (rs.next());
                     return r;
                 });
@@ -108,15 +107,27 @@ public class SqlStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() throws IllegalAccessException {
-        return sqlHelper.execute("SELECT * FROM resume r ORDER BY full_name, uuid",
+        return sqlHelper.execute("SELECT * FROM resume r\n" +
+                        "LEFT JOIN contact c ON r.uuid = c.resume_uuid\n" +
+                        "ORDER BY full_name, uuid",
                 ps -> {
                     ResultSet rs = ps.executeQuery();
-                    List<Resume> resumes = new ArrayList<>();
+                    Map<String, Resume> map = new HashMap<>();
                     while (rs.next()) {
-                        resumes.add(new Resume(rs.getString("uuid"), rs.getString("full_name")));
+                        String uuid = rs.getString("uuid");
+                        Resume resume = map.get(uuid);
+                        if (resume == null) {
+                            resume = new Resume(uuid, rs.getString("full_name"));
+                            map.put(uuid, resume);
+                        }
+                        addContact(rs, resume);
                     }
-                    return resumes;
+                    return new ArrayList<>(map.values());
                 });
+    }
+
+    private void addContact(ResultSet rs, Resume r) throws SQLException {
+        r.addContact(ContactType.valueOf(rs.getString("type")), rs.getString("value"));
     }
 
     @Override
