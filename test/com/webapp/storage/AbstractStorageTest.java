@@ -56,6 +56,8 @@ public abstract class AbstractStorageTest {
                 new OrganizationSection(
                         new Organization("Organization2", "http://Organization2.ru",
                                 new Organization.Position(2015, Month.JANUARY, "position1", "content1"))));
+        R4.addContact(ContactType.PHONE, "33333");
+        R4.addContact(ContactType.SKYPE, "Skype");
     }
 
     public AbstractStorageTest(Storage storage) {
