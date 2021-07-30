@@ -20,7 +20,7 @@ public interface Storage {
 
     void delete(String uuid);
 
-    List<Resume> getAllSorted() throws IllegalAccessException;
+    List<Resume> getAllSorted();
 
     int size();
 }

@@ -65,8 +65,13 @@ public abstract class AbstractStorage<SK> implements Storage {
     }
 
     @Override
-    public List<Resume> getAllSorted() throws IllegalAccessException {
-        List<Resume> list = doCopyAll();
+    public List<Resume> getAllSorted() {
+        List<Resume> list = null;
+        try {
+            list = doCopyAll();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
         Collections.sort(list);
         return list;
     }
