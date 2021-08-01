@@ -14,7 +14,7 @@ public abstract class AbstractStorage<SK> implements Storage {
     protected abstract void doUpdate(Resume r, SK searchKey);
     protected abstract boolean isExist(SK searchKey);
     protected abstract void doSave(Resume r, SK searchKey);
-    protected abstract Resume doGet(SK searchKey) throws IllegalAccessException;
+    protected abstract Resume doGet(SK searchKey);
     protected abstract void doDelete(SK searchKey);
     protected abstract List<Resume> doCopyAll() throws IllegalAccessException;
 
@@ -51,7 +51,7 @@ public abstract class AbstractStorage<SK> implements Storage {
     }
 
     @Override
-    public Resume get(String uuid) throws IllegalAccessException {
+    public Resume get(String uuid) {
         LOG.info("Get " + uuid);
         SK searchKey = getExistedSearchKey(uuid);
         return doGet(searchKey);

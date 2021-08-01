@@ -63,7 +63,7 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     @Override
-    public Resume doRead(InputStream is) throws IOException, IllegalAccessException {
+    public Resume doRead(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
@@ -77,7 +77,7 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
-    private Section readSection(DataInputStream dis, SectionType sectionType) throws IOException, IllegalAccessException {
+    private Section readSection(DataInputStream dis, SectionType sectionType) throws IOException {
         switch (sectionType) {
             case PERSONAL:
             case OBJECTIVE:
@@ -97,7 +97,7 @@ public class DataStreamSerializer implements StreamSerializer {
                         ))
                 );
             default:
-                throw new IllegalAccessException();
+                throw new IllegalStateException();
         }
     }
 
@@ -115,7 +115,7 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private interface ElementProcessor {
-        void process() throws IOException, IllegalAccessException;
+        void process() throws IOException;
     }
 
     private interface ElementReader<T> {
@@ -126,7 +126,7 @@ public class DataStreamSerializer implements StreamSerializer {
         void write(T t) throws IOException;
     }
 
-    private void readItems(DataInputStream dis, ElementProcessor processor) throws IOException, IllegalAccessException {
+    private void readItems(DataInputStream dis, ElementProcessor processor) throws IOException {
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
             processor.process();

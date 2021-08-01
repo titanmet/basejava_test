@@ -19,6 +19,7 @@ import java.util.UUID;
 public class Resume implements Comparable<Resume>, Serializable {
     private static final long serialVersionUID = 1L;
 
+    // Unique identifier
     private String uuid;
 
     private String fullName;
@@ -44,6 +45,22 @@ public class Resume implements Comparable<Resume>, Serializable {
         return uuid;
     }
 
+    public String getFullName() {
+        return fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
+    public Map<SectionType, Section> getSections() {
+        return sections;
+    }
+
     public String getContact(ContactType type) {
         return contacts.get(type);
     }
@@ -61,11 +78,6 @@ public class Resume implements Comparable<Resume>, Serializable {
     }
 
     @Override
-    public String toString() {
-        return uuid + '(' + fullName + ')';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -76,21 +88,14 @@ public class Resume implements Comparable<Resume>, Serializable {
                 Objects.equals(sections, resume.sections);
     }
 
-    public String getFullName() {
-        return fullName;
-    }
-
-    public Map<ContactType, String> getContacts() {
-        return contacts;
-    }
-
-    public Map<SectionType, Section> getSections() {
-        return sections;
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(uuid, fullName, contacts, sections);
+    }
+
+    @Override
+    public String toString() {
+        return uuid + '(' + fullName + ')';
     }
 
     @Override

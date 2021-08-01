@@ -102,7 +102,7 @@ public class SqlStorage implements Storage {
 
 
     @Override
-    public Resume get(String uuid) throws IllegalAccessException {
+    public Resume get(String uuid) {
         return sqlHelper.transactionExecute(conn -> {
             Resume r;
             try (PreparedStatement ps = conn.prepareStatement("SELECT * FROM resume WHERE uuid = ?")) {

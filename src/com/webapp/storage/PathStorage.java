@@ -59,7 +59,7 @@ public class PathStorage extends AbstractStorage<Path> {
     }
 
     @Override
-    protected Resume doGet(Path path) throws IllegalAccessException {
+    protected Resume doGet(Path path) {
         try {
             return streamSerializer.doRead(new BufferedInputStream(Files.newInputStream(path)));
         } catch (IOException e) {
@@ -78,15 +78,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doCopyAll() {
-        List<Resume> collect = getFilesList().map(path -> {
-            try {
-                return doGet(path);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }).collect(Collectors.toList());
-        return collect;
+        return getFilesList().map(this::doGet).collect(Collectors.toList());
     }
 
     @Override

@@ -55,7 +55,7 @@ public abstract class FileStorage extends AbstractStorage<File> {
     }
 
     @Override
-    protected Resume doGet(File file) throws IllegalAccessException {
+    protected Resume doGet(File file) {
         try {
             return streamSerializer.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
