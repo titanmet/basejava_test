@@ -6,15 +6,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-@XmlAccessorType(XmlAccessType.FIELD)
 public class ListSection extends Section {
+
     private static final long serialVersionUID = 1L;
+
+    public static final ListSection EMPTY = new ListSection("");
+
     private List<String> items;
 
     public ListSection() {
     }
 
-    public ListSection(String... items) { this(Arrays.asList(items));}
+    public ListSection(String... items) {
+        this(Arrays.asList(items));
+    }
 
     public ListSection(List<String> items) {
         Objects.requireNonNull(items, "items must not be null");
@@ -38,6 +43,7 @@ public class ListSection extends Section {
         ListSection that = (ListSection) o;
 
         return items.equals(that.items);
+
     }
 
     @Override

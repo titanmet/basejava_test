@@ -1,4 +1,4 @@
-package sql;
+package com.webapp.sql;
 
 import com.webapp.exception.ExistStorageException;
 import com.webapp.exception.StorageException;

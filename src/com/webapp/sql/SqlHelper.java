@@ -1,4 +1,4 @@
-package sql;
+package com.webapp.sql;
 
 import com.webapp.exception.StorageException;
 
@@ -14,7 +14,7 @@ public class SqlHelper {
     }
 
     public void execute(String sql) {
-        execute(sql, ps -> ps.execute());
+        execute(sql, PreparedStatement::execute);
     }
 
     public <T> T execute(String sql, SqlExecutor<T> executor) {
@@ -26,7 +26,7 @@ public class SqlHelper {
         }
     }
 
-    public <T> T transactionExecute(SqlTransaction<T> executor) {
+    public <T> T transactionalExecute(SqlTransaction<T> executor) {
         try (Connection conn = connectionFactory.getConnection()) {
             try {
                 conn.setAutoCommit(false);
@@ -41,5 +41,4 @@ public class SqlHelper {
             throw new StorageException(e);
         }
     }
-
 }

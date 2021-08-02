@@ -21,11 +21,7 @@ public class DataStreamSerializer implements StreamSerializer {
                 dos.writeUTF(entry.getKey().name());
                 dos.writeUTF(entry.getValue());
             });
-            dos.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : contacts.entrySet()) {
-                dos.writeUTF(entry.getKey().name());
-                dos.writeUTF(entry.getValue());
-            }
+
             writeCollection(dos, r.getSections().entrySet(), entry -> {
                 SectionType type = entry.getKey();
                 Section section = entry.getValue();
@@ -62,16 +58,20 @@ public class DataStreamSerializer implements StreamSerializer {
         dos.writeInt(ld.getMonth().getValue());
     }
 
+    private LocalDate readLocalDate(DataInputStream dis) throws IOException {
+        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
+    }
+
     @Override
     public Resume doRead(InputStream is) throws IOException {
         try (DataInputStream dis = new DataInputStream(is)) {
             String uuid = dis.readUTF();
             String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            readItems(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readItems(dis, () -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
             readItems(dis, () -> {
                 SectionType sectionType = SectionType.valueOf(dis.readUTF());
-                resume.addSection(sectionType, readSection(dis, sectionType));
+                resume.setSection(sectionType, readSection(dis, sectionType));
             });
             return resume;
         }
@@ -91,18 +91,12 @@ public class DataStreamSerializer implements StreamSerializer {
                         readList(dis, () -> new Organization(
                                 new Link(dis.readUTF(), dis.readUTF()),
                                 readList(dis, () -> new Organization.Position(
-                                        readLocalDate(dis), readLocalDate(dis),
-                                        dis.readUTF(), dis.readUTF()
+                                        readLocalDate(dis), readLocalDate(dis), dis.readUTF(), dis.readUTF()
                                 ))
-                        ))
-                );
+                        )));
             default:
                 throw new IllegalStateException();
         }
-    }
-
-    private LocalDate readLocalDate(DataInputStream dis) throws IOException {
-        return LocalDate.of(dis.readInt(), dis.readInt(), 1);
     }
 
     private <T> List<T> readList(DataInputStream dis, ElementReader<T> reader) throws IOException {

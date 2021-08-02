@@ -1,6 +1,5 @@
 package com.webapp.model;
 
-import com.webapp.util.DataUtil;
 import com.webapp.util.LocalDateAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -14,12 +13,15 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import static com.webapp.util.DataUtil.NOW;
-import static com.webapp.util.DataUtil.of;
+import static com.webapp.util.DateUtil.NOW;
+import static com.webapp.util.DateUtil.of;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
+
+    public static final Organization EMPTY = new Organization("", "", Position.EMPTY);
+
     private Link homePage;
     private List<Position> positions = new ArrayList<>();
 
@@ -35,9 +37,12 @@ public class Organization implements Serializable {
         this.positions = positions;
     }
 
-    @Override
-    public String toString() {
-        return "Organization(" + homePage + ',' + positions + ')';
+    public Link getHomePage() {
+        return homePage;
+    }
+
+    public List<Position> getPositions() {
+        return positions;
     }
 
     @Override
@@ -49,21 +54,20 @@ public class Organization implements Serializable {
                 Objects.equals(positions, that.positions);
     }
 
-    public Link getHomePage() {
-        return homePage;
-    }
-
-    public List<Position> getPositions() {
-        return positions;
-    }
-
     @Override
     public int hashCode() {
         return Objects.hash(homePage, positions);
     }
 
+    @Override
+    public String toString() {
+        return "Organization(" + homePage + "," + positions + ')';
+    }
+
     @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
+        public static final Position EMPTY = new Position();
+
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
         private LocalDate startDate;
         @XmlJavaTypeAdapter(LocalDateAdapter.class)
@@ -81,7 +85,6 @@ public class Organization implements Serializable {
         public Position(int startYear, Month startMonth, int endYear, Month endMonth, String title, String description) {
             this(of(startYear, startMonth), of(endYear, endMonth), title, description);
         }
-
 
         public Position(LocalDate startDate, LocalDate endDate, String title, String description) {
             Objects.requireNonNull(startDate, "startDate must not be null");
@@ -127,12 +130,7 @@ public class Organization implements Serializable {
 
         @Override
         public String toString() {
-            return "Position{" +
-                    "startDate=" + startDate +
-                    ", endDate=" + endDate +
-                    ", title='" + title + '\'' +
-                    ", description='" + description + '\'' +
-                    '}';
+            return "Position(" + startDate + ',' + endDate + ',' + title + ',' + description + ')';
         }
     }
 }

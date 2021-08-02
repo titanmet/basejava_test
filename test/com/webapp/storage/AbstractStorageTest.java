@@ -3,6 +3,7 @@ package com.webapp.storage;
 import com.webapp.Config;
 import com.webapp.exception.ExistStorageException;
 import com.webapp.exception.NotExistStorageException;
+import com.webapp.model.ContactType;
 import com.webapp.model.Resume;
 import com.webapp.storage.Storage;
 import org.junit.Assert;
@@ -15,13 +16,16 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.webapp.TestData.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
+
     protected Storage storage;
 
 
-    public AbstractStorageTest(Storage storage) {
+    protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
     }
 
@@ -47,8 +51,11 @@ public abstract class AbstractStorageTest {
     @Test
     public void update() throws Exception {
         Resume newResume = new Resume(UUID_1, "New Name");
+        newResume.setContact(ContactType.MAIL, "mail1@google.com");
+        newResume.setContact(ContactType.SKYPE, "NewSkype");
+        newResume.setContact(ContactType.MOBILE, "+7 921 222-22-22");
         storage.update(newResume);
-        Assert.assertTrue(newResume.equals(storage.get(UUID_1)));
+        assertTrue(newResume.equals(storage.get(UUID_1)));
     }
 
     @Test(expected = NotExistStorageException.class)
@@ -59,10 +66,10 @@ public abstract class AbstractStorageTest {
     @Test
     public void getAllSorted() throws Exception {
         List<Resume> list = storage.getAllSorted();
-        Assert.assertEquals(3, list.size());
+        assertEquals(3, list.size());
         List<Resume> sortedResumes = Arrays.asList(R1, R2, R3);
         Collections.sort(sortedResumes);
-        Assert.assertEquals(sortedResumes, list);
+        assertEquals(sortedResumes, list);
     }
 
     @Test
@@ -86,7 +93,7 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void deleteNotExist() throws Exception {
-        storage.get("dummy");
+        storage.delete("dummy");
     }
 
     @Test
@@ -101,11 +108,11 @@ public abstract class AbstractStorageTest {
         storage.get("dummy");
     }
 
-    public void assertGet(Resume r) throws IllegalAccessException {
-        Assert.assertEquals(r, storage.get(r.getUuid()));
+    private void assertGet(Resume r) {
+        assertEquals(r, storage.get(r.getUuid()));
     }
 
-    public void assertSize(int size) {
-        Assert.assertEquals(size, storage.size());
+    private void assertSize(int size) {
+        assertEquals(size, storage.size());
     }
 }
